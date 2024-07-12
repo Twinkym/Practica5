@@ -12,16 +12,16 @@
  */
 
 session_start();
-require_once 'D:\servidor\www\CURSO_OBJ\php\practicasGenericas\Practica5\views\header.php';
-require_once 'D:\servidor\www\CURSO_OBJ\php\practicasGenericas\Practica5\controllers\controller.php';
+require_once './views/header.php';
+require_once './controllers/controller.php';
 
 if ($_SESSION) {
-    if (isset($_SESSION['user']) && !empty($_SESSION['user'])) {
-        "require_once 'views/main.php'";
+    if (isset($_SESSION['user']) && !empty($_SESSION['name'])) {
+        "require_once '../Practica5/views/main.php'";
     } 
 } else {
-    "require_once 'views/login.php'";
+    "require_once '../Practica5/views/login.php'";
 }
 
-require_once 'views/footer.php';
+require_once '../Practica5/views/footer.php';
 ?>
