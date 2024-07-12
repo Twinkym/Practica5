@@ -74,7 +74,7 @@ class Mail {
     public $from = 'ingenio.tarragona@gmail.com'; // tu cuenta de google
     public $cco;
     public $cc;
-    private $pass = "cpxq mqoz vvsl beqi"; // password de google.
+    private $pass = ""; // password de google.
     private $mail;
 
     public function __construct($to, $user) {
