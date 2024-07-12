@@ -1,0 +1,175 @@
+​<?php
+use PHPMailer\PHPMailer\PHPMailer;
+use PHPMailer\PHPMailer\Exception;
+
+require $_SERVER['DOCUMENT_ROOT'].'/php/practica5/vendor/autoload.php'; // Asegúrate de que la ruta sea correcta
+
+require_once($_SERVER['DOCUMENT_ROOT'].'/php/practica5/model/model.php');
+
+if($_GET){
+    if(isset($_GET['reg']) && !empty($_GET['reg'])){
+        // Llegamos desde el link de email
+        if(base64_decode($_GET['reg']) == 'REG_APP_MAIL'){
+            if(isset($_GET['id']) && !empty($_GET['id'])){
+
+                // filtramos los datos del link y recogemos el nombre de usuario.
+                $user_mail = htmlspecialchars(base64_decode($_GET['id']));
+                
+                $User = new Usuarios();
+                $User->VerificarUsuario($user_mail);
+                if($User->getValidar()){
+                    // enviar el 2ª mail
+                   $res = "Cuenta activada, ya puede iniciar Logearse"; 
+                   header('location:http://cursoobj.test/php/practica5/index.php?res='.$res);
+                }
+                else
+                {
+               
+                   $res = "El usuario no existe regístrese!!!!!!"; 
+                   header('location:http://cursoobj.test/php/practica5/index.php?res='.$res);
+                }
+
+            }
+        }
+    }
+}
+
+if($_POST){
+    if(isset($_POST['accion']) and !empty($_POST['accion'])){
+        if(htmlspecialchars($_POST['accion']) == 'FORM_REG_LOGIN'){           
+            $db = new UsuariosDB();
+            if($resmysql = $db->GuardarUsuariosBD($_POST)){
+               
+                if($mail = new Mail(htmlspecialchars($_POST['email']),htmlspecialchars($_POST['user']))){ 
+                
+                    $res = '<div class="alert alert-success">
+                                Dato almacenado correctamente!!!<br>
+                                Revise su correo electrónico para validar su usuario.
+                            </div>';
+                         
+                }
+                else
+                {
+                    $res = '<div class="alert alert-success">Dato almacenado correctamente!!!</div>';
+                }              
+                
+            }
+            else
+            {
+                $res = '<div class="alert alert-danger">Error almacenando los datos!!!</div>';
+                
+            }
+            /* La función de php rawurlencode() nos permite codificar la url para que las comillas no sean previamente interpretadas */
+            header("Location:https://cursoobj.test/php/practica5/index.php?res=".rawurlencode($res));
+         
+        }
+    }
+}
+
+class Mail {
+    public $user;
+    public $to;
+    public $subject;
+    public $message;
+    public $from = 'ingenio.tarragona@gmail.com'; // tu cuenta de google
+    public $cco;
+    public $cc;
+    private $pass = "cpxq mqoz vvsl beqi"; // password de google.
+    private $mail;
+
+    public function __construct($to, $user) {
+        $this->to = $to;
+        $this->user = $user;
+        $this->mail = new PHPMailer(true);
+        $this->ConstruirMail();
+        $this->ConfigurarMail();
+        $this->EnviarMail();
+    }
+
+    private function ConstruirMail() {
+        $this->subject = "Registro en aplicación MVC";
+        $this->message = '        
+            <html>
+                <head>
+                    <title>Bienvenido a nuestra App!!!</title>
+                    <p>Gracias por registarse, para seguir con el proceso clicke el siguiente enlace</p>
+                </head>
+                <body style="background-color:blue; color:white;" >
+                    <p>Su nombre de usuario es: '.$this->user.'</p>
+                    <a href="https://cursoobj.test/php/practica5/index.php?id='.base64_encode($this->user).'&reg='.base64_encode('REG_APP_MAIL').'">REGISTRARSE</a>
+                    <p>Atentamente, el equipo de MVC Aplication.</p>
+                    </body>
+            </html>';
+    }
+
+    private function ConfigurarMail() {
+        try {
+            // Configuración del servidor SMTP
+            $this->mail->isSMTP();
+            $this->mail->Host = 'smtp.gmail.com'; // Especifica el servidor SMTP
+            $this->mail->SMTPAuth = true;
+            $this->mail->Username = 'ingenio.tarragona@gmail.com'; // Tu correo Gmail
+            $this->mail->Password = $this->pass; // Tu contraseña de Gmail o App Password
+            $this->mail->SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS;
+            $this->mail->Port = 587;
+
+            // Remitente y destinatario
+            $this->mail->setFrom('ingenio.tarragona@gmail.com', 'Direccion');
+            $this->mail->addAddress($this->to);
+
+            // Contenido del correo
+            $this->mail->isHTML(true);
+            $this->mail->Subject = $this->subject;
+            $this->mail->Body    = $this->message;
+        } catch (Exception $e) {
+            echo "Error al configurar el correo: {$this->mail->ErrorInfo}";
+        }
+    }
+
+    private function EnviarMail() {
+        try {
+            $this->mail->send();
+            return true;
+        } catch (Exception $e) {
+            echo "Error al enviar el correo: {$this->mail->ErrorInfo}";
+            return false;
+        }
+    }
+
+    public function RecibirMail() {
+        // Implementar método si es necesario
+    }
+
+    public function ResponderMail() {
+        // Implementar método si es necesario
+    }
+
+    private function FirmarMail() {
+        // Implementar método si es necesario
+    }
+}
+
+class Usuarios{
+    public $user;
+    public $validar = "false";
+
+    public function getUser(){
+        return $this->user;
+    }
+    public function getValidar(){
+        return $this->validar;
+    }
+    public function setUser($user){
+        $this->user = $user;
+    }
+    public function VerificarUsuario($user){
+        // Buscar en la BD si el usuario que trae el link está previamente registrado.
+        // cambiar el estado de 1 a 2.
+        $UserDB = new UsuariosDB();
+        if($UserDB->CambiarEstadoUsuariosBD($user)){
+            $this->validar = true;
+        }
+    }
+}
+
+?>
