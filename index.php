@@ -15,13 +15,12 @@ session_start();
 require_once './views/header.php';
 require_once './controllers/controller.php';
 
-if ($_SESSION) {
+
     if (isset($_SESSION['user']) && !empty($_SESSION['name'])) {
-        "require_once '../Practica5/views/main.php'";
+        require_once '../Practica5/views/main.php';
     } 
-} else {
-    "require_once '../Practica5/views/login.php'";
+ else {
+    require_once '../Practica5/views/login.php';
 }
 
 require_once '../Practica5/views/footer.php';
-?>

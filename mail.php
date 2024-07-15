@@ -102,15 +102,12 @@ class Mail
          *  providing a clearer control flow.
          */
         try {
-            if (isset($this->to, $this->subject, $this->message, $this->headers)) {
-                $this->mail->send($this->to, $this->subject, $this->message, $this->headers);
+            $this->mail->send();
                 return true;
-            } else {
-                throw new Exception("Faltan paràmetros para enviar el email");
-            }
+             
         } catch (Exception $e) {
             // Handle the exception here, for example, log the error.
-            error_log('Error al enviar al email: ' . $e->getMessage());
+            echo 'Error al enviar al email: {$this->mail->ErrorInfo}';
             return false; // return false if an exception occurs.
         }
     }
@@ -140,7 +137,7 @@ class Mail
     public function recibirMail()
     {
         try {
-            $this->mail->send($this->to, $this->subject, $this->message, $this->headers);
+            $this->mail->send();
             return true;
         } catch (\Exception $e) {
             error_log('Error en la recepción del E-mail: ' . $e->getMessage());

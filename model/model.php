@@ -9,6 +9,7 @@
  * @license   http://opensource.org/licenses/MIT MIT License
  * @link      http://curso_obj.test/php/practicasGenericas/
  */
+
 class ConectorDB
 {
     private $host;
@@ -66,23 +67,24 @@ class UsuariosDB extends ConectorDB
         }
     }
     public function ConsultarUsuariosDBId(Int $rowid){
-        $sql = "SELECT * FROM `app_users`";
+        $sql = "SELECT * FROM `app_users` WHERE `rowid`=".$rowid;
         $datos = $this->SeleccionarDatos($sql);
     }
-    public function BuscarUsuariosBD($user)
+    public function CambiarEstadoUsuariosBD($user)
     {
         // Prevenir el SQL Injection
         // Remove spaces.
         $user = trim($user);  
         // Convert specialChars to entities.
         $user = htmlspecialchars($user, ENT_QUOTES, 'UTF-8'); 
+        // recuperamos la rowid y tambien verificamos que existe.
         $sql = "SELECT `rowid` FROM `app_users` WHERE `name` = '".$user."'";
         $datos = $this->SeleccionarDatos($sql);
         $total = mysqli_num_rows($datos);
-
         if ($total > 0) {
             foreach($datos as $dato);
-            $sql1 = "UPDATE `app_users` SET 'status' = '2' WHERE 'rowid' = ".$dato['rowid'];
+            // Pasar del valor estado=1 a estado=2.
+            $sql1 = "UPDATE `app_users` SET `status` = 2 WHERE `app_users`.`rowid` = ".$dato['rowid'];
             $datos = $this->SeleccionarDatos($sql);
         } else {
             return false;
