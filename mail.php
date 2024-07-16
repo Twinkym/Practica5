@@ -6,6 +6,10 @@ use PHPMailer\PHPMailer\Exception;
 class Mail
 {
     public $user;
+    /**
+     * Summary of to
+     * @var 
+     */
     public $to;
     public $subject;
     public $message;
@@ -54,7 +58,7 @@ class Mail
             </head>
             <body style="background-color:blue; color:white;">
             <p>Su nombre de usuario es:' . $this->user . '</p>
-            <a href="https://practica5.test/controllers/controller.php?id=' . base64_encode($this->user) . '&reg=' . base64_encode('REG_APP_MAIL') . '">REGISTRARSE</a>
+            <a href="https://Practica5.test/controllers/controller.php?id=' . base64_encode($this->user) . '&reg=' . base64_encode('REG_APP_MAIL') . '">REGISTRARSE</a>
             <p>Atentamente, el equipo de MVC Aplication.</p>
             </body>
             </html>';

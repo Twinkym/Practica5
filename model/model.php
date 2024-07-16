@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Summary of ConectorDB
  * 
@@ -36,6 +37,9 @@ class ConectorDB
     {
         $this->ConectarBD();
         $datos = mysqli_query($this->con, $sql);
+        if (!$datos) {
+            throw new mysqli_sql_exception(mysqli_error($this->con));
+        }
         $this->DesconectarBD();
         return $datos;
     }
@@ -53,60 +57,66 @@ class ConectorDB
 
 class UsuariosDB extends ConectorDB
 {
-    public function ConsultarUsuariosDB(){
+    public function ConsultarUsuariosDB()
+    {
         $sql = "SELECT * FROM `app_users`";
         $datos = $this->SeleccionarDatos($sql);
         $total = mysqli_num_rows($datos);
         if ($total != 0) {
             $i = 1;
-            foreach ($datos as $dato){
+            foreach ($datos as $dato) {
                 $datosUsers[$i] = $dato;
                 $i++;
             }
             return $datosUsers;
         }
     }
-    public function ConsultarUsuariosDBId(Int $rowid){
-        $sql = "SELECT * FROM `app_users` WHERE `rowid`=".$rowid;
+    public function ConsultarUsuariosDBId(Int $rowid)
+    {
+        $sql = "SELECT * FROM `app_users` WHERE `rowid`=" . $rowid;
         $datos = $this->SeleccionarDatos($sql);
     }
     public function CambiarEstadoUsuariosBD($user)
     {
         // Prevenir el SQL Injection
         // Remove spaces.
-        $user = trim($user);  
+        $user = trim($user);
         // Convert specialChars to entities.
-        $user = htmlspecialchars($user, ENT_QUOTES, 'UTF-8'); 
+        $user = htmlspecialchars($user, ENT_QUOTES, 'UTF-8');
         // recuperamos la rowid y tambien verificamos que existe.
-        $sql = "SELECT `rowid` FROM `app_users` WHERE `name` = '".$user."'";
+        $sql = "SELECT `rowid` FROM `app_users` WHERE `name` = '$user'";
         $datos = $this->SeleccionarDatos($sql);
         $total = mysqli_num_rows($datos);
         if ($total > 0) {
-            foreach($datos as $dato);
+            foreach ($datos as $dato);
             // Pasar del valor estado=1 a estado=2.
-            $sql1 = "UPDATE `app_users` SET `status` = 2 WHERE `app_users`.`rowid` = ".$dato['rowid'];
-            $datos = $this->SeleccionarDatos($sql);
+            $sql1 = "UPDATE `app_users` SET `status` = 2 WHERE `app_users`.`rowid` = " . $dato['rowid'];
+            if ($this->SeleccionarDatos($sql1)) {
+                return true;
+            } else {
+                return false;
+            }
         } else {
             return false;
         }
     }
-/**
- * Summary of guardarUsuarisBD
- *
- * @param mixed $datos Datos
- *                         
- * @return mixed
- */
+    /**
+     * Summary of guardarUsuarisBD
+     *
+     * @param mixed $datos Datos
+     *                         
+     * @return mixed
+     */
     public function GuardarUsuariosBD($datos)
     {
-        $status = (isset($datos['status'])) ? $datos['status'] : 1;
+        $status = $datos['status'] ?? null;
         $sql = "        
         INSERT INTO `app_users`
         (`rowid`,`name`,`pass`,`email`,`status`)
         VALUES
-        (NULL,'" . $datos['user'] . "','" . MD5($datos['pass']) . "','" . $datos['email'] . "'," . $status . ")";
+        (NULL,'" . $datos['user'] . "','" . MD5($datos['pass']) . "','" . $datos['email'] . "'," . $status . ")
+        ";
 
         return $res = $this->SeleccionarDatos($sql);
     }
-
 }
