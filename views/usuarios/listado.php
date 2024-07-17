@@ -1,6 +1,8 @@
 <h3>Listado de Usuarios</h3>
+
 <a class="btn btn-primary" href="index.php?views=usuarios&&action=add_user">Nuevo Usuario</a>
-<Table id="table-users" class="table table-striped table-dark table-hover">
+
+<table id="table-users" class="table table-striped table-primary table-hover">
     <thead>
         <tr>
             <th>Num.</th>
@@ -13,29 +15,43 @@
     </thead>
     <tbody>
         <?php
-        if (isset($DatosUsers)) {
-            $i = 1;
-            foreach ($DatosUsers as $DatosUser) {
-                echo print_r($DatosUser);
-                $checked = ($DatosUser['status'] == 2) ? "checked" : "";}
-                echo '<tr>';
-                echo '<td>' . $i . '</td>';
-                echo '<td>' . $DatosUser->user . '</td>';
-                echo '<td>' . $DatosUser->email . '</td>';
-                echo '<td>' . $DatosUser->estado . '</td>';
-                echo '<td>
-                    <div class="form-check form-switch">
-                        <input class="form-check-input" type="checkbox" role="switch" id="flexSwitchCheckDefault" >
-                    </div>
-                </td>';
-                echo '<td><i class="fa-solid fa-pen-to-square"></i></td>';
-                echo '<td><i class="fa-solid fa-trash"></i></td>';
-                echo '</tr>';
-                $i++;
+            if(isset($DatosUsers)){
+                $i=1;
+                foreach($DatosUsers as $DatosUser){
+                   if($DatosUser['status'] == 2){ $checked="checked"; }else{ $checked=""; }
+                    echo "<tr>";
+                    echo "<td>".$i."</td>";
+                    echo "<td>".$DatosUser['name']."</td>";
+                    echo "<td>".$DatosUser['email']."</td>";
+                    echo '<td>                    
+                        <div class="form-check form-switch">
+                            <input onchange="Cstatus" class="form-check-input" type="checkbox" role="switch" id="flexSwitchCheckDefault" '.$checked.' >                        
+                        </div>                    
+                    </td>';
+                    echo '<td><a class="btn btn-success" href="index.php?views=usuarios&&action=edit_user&&id='.base64_encode($DatosUser['rowid']).'"><i class="fa-solid fa-pen-to-square"></i></a></td>';
+                    echo '<td><a class="btn btn-danger" href="index.php?views=usuarios&&action=delete_user&&id='.base64_encode($DatosUser['rowid']).'"><i class="fa-solid fa-trash"></i></a></td>';
+                    echo "</tr>";
+                    $i++;
+                }
             }
         ?>
     </tbody>
-    <tfoot></tfoot>
-</Table>
+    <tfood>
 
-<script>let table = new DataTable('table-users');</script>
+    </tfood>
+</table>
+
+<script>
+let table = new DataTable('#table-users');
+
+function Cstatus(id) {
+    Data = {'action':'CAMBIAR_STATUS_USER', 'id':id}
+
+    $.post('controllers/usuarios.php', Data, function(res){
+        alert(res);
+    })
+
+    $.get('controllers/usuarios.php', Daata,function(res) {
+    });
+}
+</script>
