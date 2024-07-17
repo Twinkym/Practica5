@@ -63,6 +63,10 @@ class UsuariosDB extends ConectorDB
                 foreach ($datos as $dato);
                 return $dato;
             }
+            else 
+            {
+                return $msn;
+            }
         } catch (Exception $e) {
             return $e->getMessage();
         }
@@ -103,11 +107,7 @@ class UsuariosDB extends ConectorDB
         $sql = "SELECT `status` FROM `app_users` WHERE `rowid` = " . $rowid;
         if ($datos = $this->SeleccionarDatos($sql)) {
             foreach ($datos as $dato) {
-                if ($dato['status'] == 2) {
-                    $status = 1;
-                } else {
-                    $status = 2;
-                };
+                $status = ($dato['status'] == 2) ? 1 : 2;;
             }
             $sql1 = "UPDATE `app_users` SET `status`= " . $status . " WHERE `rowid` = " . $rowid;
             $res = $this->SeleccionarDatos($sql1);

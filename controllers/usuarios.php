@@ -9,8 +9,8 @@ if($_GET){
             $DatosUsers = $UserDB->ConsultarUsuariosDB();
             if (isset($_GET['action']) and !empty($_GET['action'])){
                 if($_GET['action'] == 'edit_user'){
-                    $rowid = base64_decode(trimhtmlspecialchars($_GET['id']));
-                    $DatosUser = $UserDB->ConsultarUsuariosDB($rowid);
+                    $rowid = base64_decode(trim(htmlspecialchars($_GET['id'])));
+                    $DatosUser = $UserDB->ConsultarUsuariosDBId($rowid);
                 }
             }
         }
