@@ -1,8 +1,8 @@
 <?php
-require $_SERVER['DOCUMENT_ROOT'] . '/vendor/autoload.php'; // Asegúrate de que la ruta sea correcta
-require_once($_SERVER['DOCUMENT_ROOT'] . '/model/model.php');
-require_once($_SERVER['DOCUMENT_ROOT'] . '/controllers/mail.php');
-require_once($_SERVER['DOCUMENT_ROOT'] . '/controllers/usuarios.php');
+require_once 'D:\servidor\www\Practica5\vendor\autoload.php'; // Asegúrate de que la ruta sea correcta
+require_once 'D:\servidor\www\Practica5\model\model.php';
+require_once 'D:\servidor\www\Practica5\controllers\mail.php';
+require_once 'D:\servidor\www\Practica5\controllers\usuarios.php';
 
 
 
@@ -75,6 +75,7 @@ if ($_POST) {
                     session_start();
                     $_SESSION['email'] = $dtUser['email'];
                     $_SESSION['user'] = $dtUser['name'];
+                    $_SESSION['rowid'] = $dtUser['rowid'];
                     $validacion = true;
                     break;
                 }
@@ -86,5 +87,31 @@ if ($_POST) {
                 header('location:https://practica5.test/index.php');
             }
         }
+    }
+}
+
+class FiltrarDatos
+{
+
+    public function Filtrar($datos)
+    {
+        // Verificar el contenido del array de datos para depuración.
+        foreach ($datos as $key => $value) {
+            echo "Los indices son: $key, los valores de los indices son: $value</br>";
+        }
+        foreach ($datos as $key => $value) {
+            if (is_string($datos)) {
+                $datos = trim($datos);
+                $datos = stripslashes($datos);
+                $datos = htmlspecialchars($datos);
+
+                // Convertir el password a MD5
+                if (isset($datos['pass'])) {
+                    $datos['pass'] = MD5($datos['pass']);
+                }
+            }
+        }
+        // Retornar el array $datos filtrado.
+        return $datos;
     }
 }

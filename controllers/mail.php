@@ -17,7 +17,7 @@ class Mail
     public $from = 'ddelapuenteenriquez@gmail.com'; // tu cuenta de google.
     public $cco;
     public $cc;
-    private $pass = ""; // password de aplicacion de Google.
+    private $pass = "mnlt cqvc tdtl ugcd"; // password de aplicacion de Google.
     private $mail;
     public $enviado = false;
 

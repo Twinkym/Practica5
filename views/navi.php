@@ -1,7 +1,7 @@
 <nav class="navbar navbar-expand-lg bg-body-tertiary">
   <div class="container-fluid">
     <a class="navbar-brand" href="#">
-        <img src="../img/LogoMakr-1MionR.png" alt="Logo" style="width:100px"/>
+        <img src="img\LogoMakr-1MionR.png" alt="Logo" style="width:100px"/>
     </a>
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
       <span class="navbar-toggler-icon"></span>
@@ -13,6 +13,9 @@
         </li>
         <li class="nav-item">
           <a class="nav-link" href="index.php?views=usuarios">Usuarios</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="index.php?views=tareas">Tareas</a>
         </li>
         <li class="nav-item dropdown">
           <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">

@@ -25,7 +25,7 @@
                     echo "<td>".$DatosUser['email']."</td>";
                     echo '<td>                    
                         <div class="form-check form-switch">
-                            <input onchange="Cstatus" class="form-check-input" type="checkbox" role="switch" id="flexSwitchCheckDefault" '.$checked.' >                        
+                            <input onchange="CStatus('.$DatosUser['rowid'].')" class="form-check-input" type="checkbox" role="switch" id="flexSwitchCheckDefault" '.$checked.' >                        
                         </div>                    
                     </td>';
                     echo '<td><a class="btn btn-success" href="index.php?views=usuarios&&action=edit_user&&id='.base64_encode($DatosUser['rowid']).'"><i class="fa-solid fa-pen-to-square"></i></a></td>';
@@ -42,16 +42,24 @@
 </table>
 
 <script>
+
 let table = new DataTable('#table-users');
 
-function Cstatus(id) {
-    Data = {'action':'CAMBIAR_STATUS_USER', 'id':id}
+function CStatus(id){
+    Data = {'action':'CAMBIAR_STATUS_USER','rowid':id}
 
-    $.post('controllers/usuarios.php', Data, function(res){
-        alert(res);
+    $.post('controller/usuarios.php', Data , function(res){       
+        if(res == 1){            
+            $('#res').html('<div class="alert alert-success">Se ha realizado el cambio de estado correctamente.</div>')
+        }
+        else
+        {
+            $('#res').html('<div class="alert alert-danger">Todo fue mal.</div>')  
+        }
     })
 
-    $.get('controllers/usuarios.php', Daata,function(res) {
-    });
+
 }
+
+
 </script>
