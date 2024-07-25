@@ -1,3 +1,15 @@
+<?php 
+
+
+
+
+
+?>
+
+
+
+
+
 <h3>Formulario de Tareas</h3>
 <form class="form-control" method="post" action="controllers/tareas.php">
     <div class="row p-2">

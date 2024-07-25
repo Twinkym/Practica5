@@ -212,5 +212,43 @@ Class TareasDB extends ConectorDB{
 
     }
 
-    
+    public function ConsultarTareasDB(int $idUser){
+        $sql = "SELECT app_tareas.*, app_users.name 
+                FROM `app_tareas` 
+                JOIN `app_users` ON `app_users`.`idUser` = `app_users`.`rowid`
+                WHERE `idUsers` = ".$idUser." 
+                ORDER BY `finicio` ASC;
+        ";
+
+        $datos = $this->SeleccionarDatos($sql);
+        $total = mysqli_num_rows($datos);
+    }
+
+    public function DeleteTareasDBId(int $rowid){
+        $sql = "DELETE FROM `app_tareas` WHERE `rowid = ".$rowid;
+        return $res = $this->SeleccionarDatos($sql);
+    }
+
+    public function ConsultarTareasId(int $rowid) {
+        $sql = "SELECT * FROM `app_tareas WHERE `rowid = ".$rowid;
+        $datos = $this->SeleccionarDatos($sql);
+        $total = mysqli_num_rows($datos);
+        if ($total> 0){
+            return $datos;
+        } else{
+            return $datos = [];
+        }
+    }
+
+public function UdateTareasDB(array $datos) {
+    $sql = "UPDATE `app_tareas` SET `nombre` = '".$datos['nombre']."',
+    `descrip` = '".$datos['descrip']."',
+    `horaProgramada` = '".$datos['horaProgramada']."',
+    `finicio` = '".$datos['finicio']."',
+    `ffinal` = '".$datos['ffinal']."',
+    `estado` = '".$datos['estado']."'
+    WHERE `rowid` = ".$datos['rowid'];
+
+    return $res = $this->SeleccionarDatos($sql);
+}
 }

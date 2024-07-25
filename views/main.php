@@ -39,7 +39,7 @@
             }           
             else
             {
-                include ($_SERVER['DOCUMENT_ROOT'].'/views/tareas/listado.php');
+                include ($_SERVER['DOCUMENT_ROOT'].'/views/tareas/listado.php   ');
             }            
         }
     }
