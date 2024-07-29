@@ -188,7 +188,7 @@ Class TareasDB extends ConectorDB{
                 FOREIGN KEY (`idUser`) REFERENCES `app_users` (`rowid`) ON DELETE RESTRICT ON UPDATE RESTRICT
             );
         ";
-        $this->SeleccionarDatos($sql);
+        return $res = $this->SeleccionarDatos($sql);
     }
 
     public function GuardarTareasDB($datos){
@@ -206,8 +206,8 @@ Class TareasDB extends ConectorDB{
         )
         ";
 
-        $res = $this->SeleccionarDatos($sql);
-        return $res;
+        return $res = $this->SeleccionarDatos($sql);
+         
 
 
     }
