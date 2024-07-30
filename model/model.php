@@ -175,80 +175,102 @@ Class UsuariosDB extends ConectorDB{
 Class TareasDB extends ConectorDB{
     public function InstallTareas(){
         $sql = "
-            CREATE TABLE IF NOT EXISTS `app_tareas`
+            CREATE TABLE `app_tareas` if not exists `app_tareas`
             (
                 `rowid` int NOT NULL primary key auto_increment,
                 `idUser` int NOT NULL,
                 `nombre` varchar(150) not null,
                 `descrip` varchar(250) not null,
-                `horaProgram` datatime ,
+                `horaProgram` datetime ,
                 `finicio`  date,
                 `ffinal` date,
                 `estado` enum('activa','pendiente','finalizar','en curso','cancelada','fallida') NOT NULL,
-                FOREIGN KEY (`idUser`) REFERENCES `app_users` (`rowid`) ON DELETE RESTRICT ON UPDATE RESTRICT
             );
+            
+            ALTER TABLE `app_tareas` ADD FOREIGN KEY (`idUser`) REFERENCES `app_users`(`rowid`) ON DELETE RESTRICT ON UPDATE RESTRICT;
         ";
-        return $res = $this->SeleccionarDatos($sql);
     }
 
-    public function GuardarTareasDB($datos){
-        $sql = "INSERT INTO `app_tareas`
-        (`idUser`,`nombre`,`descrip`,`horaProgram`,`finicio`,`ffinal`,`estado`) 
-        VALUE
-        (
-        '".$datos['idUser']."',
-        '".$datos['nombre']."',
-        '".$datos['descrip']."',
-        '".$datos['horaProgramada']."',
-        '".$datos['finicio']."',
-        '".$datos['ffinal']."',
-        '".$datos['estado']."'
-        )
-        ";
-
-        return $res = $this->SeleccionarDatos($sql);
-         
-
-
-    }
-
-    public function ConsultarTareasDB(int $idUser){
-        $sql = "SELECT app_tareas.*, app_users.name 
-                FROM `app_tareas` 
-                JOIN `app_users` ON `app_users`.`idUser` = `app_users`.`rowid`
-                WHERE `idUsers` = ".$idUser." 
-                ORDER BY `finicio` ASC;
-        ";
-
+    public function ConsultarTareasId($rowid){
+        $sql = "SELECT * FROM `app_tareas` WHERE `rowid` =".$rowid;
         $datos = $this->SeleccionarDatos($sql);
         $total = mysqli_num_rows($datos);
-    }
-
-    public function DeleteTareasDBId(int $rowid){
-        $sql = "DELETE FROM `app_tareas` WHERE `rowid = ".$rowid;
-        return $res = $this->SeleccionarDatos($sql);
-    }
-
-    public function ConsultarTareasId(int $rowid) {
-        $sql = "SELECT * FROM `app_tareas WHERE `rowid = ".$rowid;
-        $datos = $this->SeleccionarDatos($sql);
-        $total = mysqli_num_rows($datos);
-        if ($total> 0){
+        if($total > 0){
             return $datos;
-        } else{
+        }
+        else
+        {
             return $datos = [];
         }
     }
 
-public function UdateTareasDB(array $datos) {
-    $sql = "UPDATE `app_tareas` SET `nombre` = '".$datos['nombre']."',
-    `descrip` = '".$datos['descrip']."',
-    `horaProgramada` = '".$datos['horaProgramada']."',
-    `finicio` = '".$datos['finicio']."',
-    `ffinal` = '".$datos['ffinal']."',
-    `estado` = '".$datos['estado']."'
-    WHERE `rowid` = ".$datos['rowid'];
+    public function GuardarTareasDB($datos){
 
-    return $res = $this->SeleccionarDatos($sql);
-}
+        $sql = "INSERT INTO `app_tareas`
+        (`idUser`,`nombre`,`descrip`,`horaProgram`,`finicio`,`ffinal`,`estado`) 
+        VALUES
+        (".$datos['idUser'].",
+        '".$datos['nombre']."',
+        '".$datos['descrip']."',
+        '".$datos['horaProgram']."',
+        '".$datos['finicio']."',
+        '".$datos['ffinal']."',
+        '".$datos['estado']."')
+        ";
+
+        $res = $this->SeleccionarDatos($sql);
+        return $res;
+
+
+    }
+
+    public function ConsultarTareasUser(Int $idUser){
+        /*
+        $sql = "SELECT `app_tareas`.* , `app_users`.`name`  
+        FORM `app_tareas` 
+        JOIN `app_users` ON `app_tareas`.idUsers` = `app.users`.`rowid`` 
+        WHERE `idUser`=".$idUser." ORDER BY `finicio` ASC ";
+        */
+
+        $sql = "SELECT app_tareas.*, app_users.name
+        FROM `app_tareas`
+        JOIN `app_users` ON `app_tareas`.`idUser` = `app_users`.`rowid`
+        WHERE `idUser` = ".$idUser."
+        ORDER BY `finicio` ASC";
+
+        $datos = $this->SeleccionarDatos($sql);
+        $total = mysqli_num_rows($datos);
+        if($total > 0){
+            return $datos;
+        }
+        else
+        {
+            return $datos = [];
+        }
+
+
+
+    }
+
+    public function DeleteTareasDB($id){
+        $sql = "DELETE FROM `app_tareas` WHERE `rowid`=".$id;
+        $res = $this->SeleccionarDatos($sql);
+        return $res; 
+        
+    }
+    
+    public function UpdateTareasDB(array $datos){
+        $sql = "
+        UPDATE `app_tareas` SET 
+        `nombre` = '".$datos['nombre']."',
+        `descrip` = '".$datos['descrip']."',
+        `horaProgram` = '".$datos['horaProgram']."',
+        `finicio` = '".$datos['finicio']."',
+        `ffinal` = '".$datos['ffinal']."',
+        `estado` = '".$datos['estado']."'
+        WHERE `rowid`=".$datos['rowid'];
+        return $res = $this->SeleccionarDatos($sql);
+    }
+
+    
 }

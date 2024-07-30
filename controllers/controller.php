@@ -1,8 +1,10 @@
 <?php
 require_once 'D:\servidor\www\Practica5\vendor\autoload.php'; // Asegúrate de que la ruta sea correcta
+
 require_once 'D:\servidor\www\Practica5\model\model.php';
 require_once 'D:\servidor\www\Practica5\controllers\mail.php';
 require_once 'D:\servidor\www\Practica5\controllers\usuarios.php';
+require_once 'D:\servidor\www\Practica5\controllers\tareas.php';
 
 
 
